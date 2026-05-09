@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conecta Agro — Cadastro de Equipamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1a5c2e;
+    --green-dark: #134522;
+    --green-light: #edf7f0;
+    --green-mid: #2e7d4a;
+    --gold: #c8960c;
+    --text: #1c1c1c;
+    --text-muted: #5a5a5a;
+    --text-light: #8a8a8a;
+    --border: rgba(0,0,0,0.10);
+    --border-focus: #1a5c2e;
+    --bg: #f5f4f0;
+    --card: #ffffff;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--green);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: .75rem;
+  }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: -.3px;
+  }
+  .logo-name span { color: #a8d8b5; }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+    margin-top: .5rem;
+  }
+  .header-badge::before { content: '🌱'; font-size: 10px; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: var(--green-dark);
+    padding: .6rem 1.25rem;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 5px;
+  }
+  .progress-bar-bg {
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: #a8d8b5;
+    border-radius: 2px;
+    transition: width .4s ease;
+    width: 0%;
+  }
+
+  /* FORM BODY */
+  .form-body {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 2.5rem;
+  }
+
+  /* SECTION */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: .75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: #fafaf8;
+  }
+  .section-icon {
+    width: 28px; height: 28px;
+    background: var(--green-light);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .section-body { padding: 1rem 1.25rem; }
+
+  /* FIELDS */
+  .field { margin-bottom: .875rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .req { color: #c0392b; margin-left: 2px; }
+
+  input[type=text], input[type=number], input[type=tel],
+  input[type=email], select, textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(26,92,46,.1);
+  }
+  textarea { resize: vertical; min-height: 72px; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23555' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* PRICE */
+  .price-wrap { position: relative; }
+  .price-wrap .prefix {
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px; color: var(--text-light);
+    pointer-events: none;
+  }
+  .price-wrap input { padding-left: 32px; }
+
+  /* RADIO BUTTONS */
+  .radio-group { display: flex; gap: 8px; }
+  .radio-opt {
+    flex: 1;
+    padding: 8px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .radio-opt:hover { border-color: var(--green-mid); color: var(--green-mid); }
+  .radio-opt.sel {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green);
+  }
+
+  /* FOTO */
+  .foto-area {
+    border: 2px dashed #ccc;
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    background: #fafaf8;
+    transition: border-color .15s, background .15s;
+  }
+  .foto-area:hover { border-color: var(--green); background: var(--green-light); }
+  .foto-area-icon { font-size: 30px; display: block; margin-bottom: 6px; }
+  .foto-area p { font-size: 13px; color: var(--text-muted); }
+  .foto-area small { font-size: 11px; color: var(--text-light); display: block; margin-top: 3px; }
+  #fileInput { display: none; }
+  .foto-preview {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+  }
+  .foto-thumb {
+    width: 68px; height: 68px;
+    border-radius: var(--radius);
+    object-fit: cover;
+    border: 1px solid var(--border);
+  }
+  .foto-count {
+    font-size: 12px; color: var(--green);
+    margin-top: 6px; font-weight: 500;
+  }
+
+  /* CHECKBOX */
+  .check-list { display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    cursor: pointer;
+  }
+  .check-item input[type=checkbox] {
+    width: 17px; height: 17px;
+    accent-color: var(--green);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .check-item span { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  /* AVISO FOTOS */
+  .info-box {
+    background: #fffbea;
+    border: 1px solid #f0d060;
+    border-radius: var(--radius);
+    padding: .65rem .9rem;
+    font-size: 12px;
+    color: #7a5c00;
+    margin-top: .75rem;
+    line-height: 1.5;
+  }
+
+  /* SUBMIT */
+  .submit-wrap { padding: 0 0 .5rem; }
+  .btn-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    letter-spacing: .01em;
+  }
+  .btn-submit:hover { background: var(--green-dark); }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: .75rem;
+    line-height: 1.6;
+  }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    max-width: 520px;
+    margin: 3rem auto;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+  .success-icon { font-size: 52px; display: block; margin-bottom: 1rem; }
+  .success-screen h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--green);
+    margin-bottom: .5rem;
+  }
+  .success-screen p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .btn-novo {
+    display: inline-block;
+    margin-top: 1.25rem;
+    padding: 10px 24px;
+    background: var(--green);
+    color: #fff;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  @media(max-width:400px) {
+    .row2 { grid-template-columns: 1fr; }
+    .radio-group { flex-wrap: wrap; }
+    .radio-opt { min-width: calc(50% - 4px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- CABEÇALHO -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-row">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-name">Conecta<span>Agro</span></div>
+    </div>
+    <div class="header-sub">Cadastro de equipamento para venda</div>
+    <div class="header-badge">Intermediação de negócios agrícolas</div>
+  </div>
+</div>
+
+<!-- BARRA DE PROGRESSO -->
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>Preenchimento</span>
+    <span id="pctLabel">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</div>
+
+<!-- FORMULÁRIO -->
+<div class="form-body" id="formApp">
+
+  <!-- ===== SEÇÃO 1: EQUIPAMENTO ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚜</div>
+      <div class="section-title">Identificação do equipamento</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label>Nome do equipamento <span class="req">*</span></label>
+        <input type="text" id="nomeEquip" placeholder="Ex: Trator, Pulverizador, Colheitadeira..." oninput="prog()">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Marca <span class="req">*</span></label>
+          <input type="text" id="marca" placeholder="Ex: John Deere" oninput="prog()">
+        </div>
+        <div class="field">
+          <label>Modelo</label>
+          <input type="text" id="modelo" placeholder="Ex: 5075E">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Cor predominante</label>
+          <input type="text" id="cor" placeholder="Ex: Verde">
+        </div>
+        <div class="field">
+          <label>Ano de fabricação</label>
+          <input type="number" id="ano" placeholder="Ex: 2019" min="1950" max="2026">
+        </div>
+      </div>
+      <div class="field">
+        <label>Número de série / chassi</label>
+        <input type="text" id="serie" placeholder="Informe se disponível">
+      </div>
+      <div class="field">
+        <label>Estado de conservação <span class="req">*</span></label>
+        <select id="estado" onchange="prog()">
+          <option value="">Selecione...</option>
+          <option>Novo</option>
+          <option>Excelente</option>
+          <option>Bom</option>
+          <option>Regular</option>
+          <option>Ruim</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Está funcionando? <span class="req">*</span></label>
+        <div class="radio-group" id="grpFunc">
+          <div class="radio-opt" onclick="radio('func','Sim',this)">Sim</div>
+          <div class="radio-opt" onclick="radio('func','Não',this)">Não</div>
+          <div class="radio-opt" onclick="radio('func','Parcialmente',this)">Parcialmente</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 2: DOCUMENTAÇÃO ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📄</div>
+      <div class="section-title">Documentação</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label>Possui nota fiscal?</label>
+        <div class="radio-group" id="grpNf">
+          <div class="radio-opt" onclick="radio('nf','Sim',this)">Sim</div>
+          <div class="radio-opt" onclick="radio('nf','Não',this)">Não</div>
+          <div class="radio-opt" onclick="radio('nf','Não sei',this)">Não sei</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 3: VALORES ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💰</div>
+      <div class="section-title">Valores</div>
+    </div>
+    <div class="section-body">
+      <div class="row2">
+        <div class="field">
+          <label>Preço solicitado <span class="req">*</span></label>
+          <div class="price-wrap">
+            <span class="prefix">R$</span>
+            <input type="number" id="preco" placeholder="0,00" oninput="prog()">
+          </div>
+        </div>
+        <div class="field">
+          <label>Preço mínimo</label>
+          <div class="price-wrap">
+            <span class="prefix">R$</span>
+            <input type="number" id="precoMin" placeholder="0,00">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 4: CONTATO ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👤</div>
+      <div class="section-title">Contato</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label>Nome de contato <span class="req">*</span></label>
+        <input type="text" id="nomeContato" placeholder="Seu nome completo" oninput="prog()">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Telefone / WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="telefone" placeholder="(00) 00000-0000" oninput="maskTel(this);prog()">
+        </div>
+        <div class="field">
+          <label>Cidade</label>
+          <input type="text" id="cidade" placeholder="Sua cidade">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 5: FOTOS ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📷</div>
+      <div class="section-title">Fotos do equipamento</div>
+    </div>
+    <div class="section-body">
+      <div class="foto-area" onclick="document.getElementById('fileInput').click()">
+        <span class="foto-area-icon">🖼️</span>
+        <p>Toque aqui para adicionar fotos</p>
+        <small>Até 5 fotos — JPG ou PNG</small>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFotos(this)">
+      <div class="foto-preview" id="fotoPreview"></div>
+      <div class="foto-count" id="fotoCount"></div>
+      <div class="info-box">
+        ⚠️ As fotos são exibidas aqui para sua conferência. Para enviar as imagens junto ao cadastro, encaminhe-as pelo WhatsApp ou e-mail após o envio do formulário.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEÇÃO 6: AUTORIZAÇÃO ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">✅</div>
+      <div class="section-title">Autorização</div>
+    </div>
+    <div class="section-body">
+      <div class="check-list">
+        <label class="check-item">
+          <input type="checkbox" id="autoriza" onchange="prog()">
+          <span>Autorizo o compartilhamento dessas informações para fins de intermediação de venda pela <strong>Conecta Agro</strong></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="whatsapp">
+          <span>Aceito receber contato via WhatsApp</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÃO ENVIAR -->
+  <div class="submit-wrap">
+    <button class="btn-submit" id="btnEnviar" onclick="enviar()">
+      Enviar cadastro →
+    </button>
+    <div class="footer-note">
+      Ao enviar, suas informações serão encaminhadas com segurança à equipe Conecta Agro.<br>
+      Campos com <span style="color:#c0392b">*</span> são obrigatórios.
+    </div>
+  </div>
+
+</div><!-- /form-body -->
+
+<!-- TELA DE SUCESSO -->
+<div class="success-screen" id="successScreen">
+  <span class="success-icon">🎉</span>
+  <h2>Cadastro enviado com sucesso!</h2>
+  <p>Obrigado! A equipe <strong>Conecta Agro</strong> recebeu suas informações e entrará em contato em breve para dar continuidade à negociação.</p>
+  <button class="btn-novo" onclick="novoForm()">Cadastrar outro equipamento</button>
+</div>
+
+<script>
+// ── ESTADO DOS RADIO ──────────────────────────────
+const R = {};
+function radio(g, v, el) {
+  R[g] = v;
+  el.closest('.radio-group').querySelectorAll('.radio-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  prog();
+}
+
+// ── MÁSCARA TELEFONE ──────────────────────────────
+function maskTel(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,11);
+  if (v.length > 6) v = v.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+  else if (v.length > 2) v = v.replace(/^(\d{2})(\d*)/, '($1) $2');
+  el.value = v;
+}
+
+// ── FOTOS ─────────────────────────────────────────
+function handleFotos(input) {
+  const prev = document.getElementById('fotoPreview');
+  const cnt  = document.getElementById('fotoCount');
+  const files = Array.from(input.files).slice(0, 5);
+  prev.innerHTML = '';
+  files.forEach(f => {
+    const r = new FileReader();
+    r.onload = e => {
+      const img = document.createElement('img');
+      img.className = 'foto-thumb';
+      img.src = e.target.result;
+      prev.appendChild(img);
+    };
+    r.readAsDataURL(f);
+  });
+  cnt.textContent = files.length ? `${files.length} foto(s) selecionada(s)` : '';
+}
+
+// ── PROGRESSO ─────────────────────────────────────
+function prog() {
+  const checks = [
+    document.getElementById('nomeEquip').value.trim(),
+    document.getElementById('marca').value.trim(),
+    document.getElementById('estado').value,
+    R['func'] || '',
+    document.getElementById('preco').value,
+    document.getElementById('nomeContato').value.trim(),
+    document.getElementById('telefone').value.trim(),
+    document.getElementById('autoriza').checked ? 'ok' : '',
+  ];
+  const n = checks.filter(Boolean).length;
+  const pct = Math.round((n / checks.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pctLabel').textContent = pct + '%';
+}
+
+// ── FORMATAR REAIS ────────────────────────────────
+function fmt(v) {
+  if (!v) return '—';
+  return 'R$ ' + parseFloat(v).toLocaleString('pt-BR', {minimumFractionDigits:2});
+}
+
+// ── ENVIAR VIA FORMSUBMIT ─────────────────────────
+function enviar() {
+  // Validação
+  const obrig = {
+    'Nome do equipamento': document.getElementById('nomeEquip').value.trim(),
+    'Marca':               document.getElementById('marca').value.trim(),
+    'Estado de conservação': document.getElementById('estado').value,
+    'Funcionando':         R['func'] || '',
+    'Preço solicitado':    document.getElementById('preco').value,
+    'Nome de contato':     document.getElementById('nomeContato').value.trim(),
+    'Telefone':            document.getElementById('telefone').value.trim(),
+  };
+  const faltando = Object.keys(obrig).filter(k => !obrig[k]);
+  if (faltando.length) {
+    alert('Por favor, preencha os campos obrigatórios:\n• ' + faltando.join('\n• '));
+    return;
+  }
+  if (!document.getElementById('autoriza').checked) {
+    alert('É necessário autorizar o compartilhamento das informações para continuar.');
+    return;
+  }
+
+  // Monta corpo do e-mail como texto estruturado
+  const dados = `
+═══════════════════════════════════
+  NOVO CADASTRO — CONECTA AGRO
+═══════════════════════════════════
+
+📋 EQUIPAMENTO
+• Nome: ${obrig['Nome do equipamento']}
+• Marca: ${obrig['Marca']}
+• Modelo: ${document.getElementById('modelo').value || '—'}
+• Cor: ${document.getElementById('cor').value || '—'}
+• Ano: ${document.getElementById('ano').value || '—'}
+• Nº de série: ${document.getElementById('serie').value || '—'}
+• Estado: ${obrig['Estado de conservação']}
+• Funcionando: ${obrig['Funcionando']}
+
+📄 DOCUMENTAÇÃO
+• Nota fiscal: ${R['nf'] || '—'}
+
+💰 VALORES
+• Preço solicitado: ${fmt(document.getElementById('preco').value)}
+• Preço mínimo: ${fmt(document.getElementById('precoMin').value)}
+
+👤 CONTATO
+• Nome: ${obrig['Nome de contato']}
+• Telefone: ${obrig['Telefone']}
+• Cidade: ${document.getElementById('cidade').value || '—'}
+• Aceita WhatsApp: ${document.getElementById('whatsapp').checked ? 'Sim' : 'Não'}
+
+✅ AUTORIZAÇÃO
+• Compartilhamento autorizado: Sim
+
+═══════════════════════════════════
+  Cadastro enviado via Conecta Agro
+═══════════════════════════════════
+  `.trim();
+
+  // Envia via FormSubmit
+  const SEU_EMAIL = 'conectaagromaquinas@gmail.com'; // ← SUBSTITUIR pelo e-mail real
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `https://formsubmit.co/${SEU_EMAIL}`;
+  form.style.display = 'none';
+
+  const campos = {
+    '_subject': '🌿 Novo cadastro de equipamento — Conecta Agro',
+    '_captcha': 'false',
+    '_template': 'box',
+    'Dados do Cadastro': dados,
+    'Nome do Contato': obrig['Nome de contato'],
+    'Telefone': obrig['Telefone'],
+    'Equipamento': obrig['Nome do equipamento'] + ' — ' + obrig['Marca'],
+    'Preco': fmt(document.getElementById('preco').value),
+  };
+
+  Object.entries(campos).forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  // Mostra sucesso
+  document.getElementById('formApp').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// ── NOVO FORMULÁRIO ───────────────────────────────
+function novoForm() {
+  location.reload();
+}
+</script>
+</body>
+</html>
